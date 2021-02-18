@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import { Ionicons } from '@expo/vector-icons';
 
 const ListItem = ({
   item,
@@ -42,7 +42,7 @@ const ListItem = ({
         )}
         <View style={styles.iconView}>
           {isEditing && editItemDetail.id === item.id ? (
-            <Icon
+            <Ionicons
               name="save"
               size={20}
               color="green"
@@ -50,7 +50,7 @@ const ListItem = ({
             />
           ) : (
             !checked.length && (
-              <Icon
+              <Ionicons
                 name="pencil"
                 size={20}
                 color="blue"
@@ -58,7 +58,7 @@ const ListItem = ({
               />
             )
           )}
-          <Icon
+          <Ionicons
             name="remove"
             size={20}
             color="firebrick"

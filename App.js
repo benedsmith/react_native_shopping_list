@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, FlatList, Alert} from 'react-native';
 import {uuid} from 'uuidv4';
+import { registerRootComponent } from 'expo';
 
 import Header from './components/Header';
 import ListItem from './components/ListItem';
@@ -128,7 +129,10 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 30, 
   },
 });
+
+registerRootComponent(App);
 
 export default App;

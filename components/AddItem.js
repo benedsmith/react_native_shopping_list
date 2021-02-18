@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import { Ionicons } from '@expo/vector-icons';
 
 const AddItem = ({addItem}) => {
   const [text, setText] = useState('');
@@ -27,7 +27,7 @@ const AddItem = ({addItem}) => {
           setText('');
         }}>
         <Text style={styles.btnText}>
-          <Icon name="plus" size={20} /> Add Item
+          <Ionicons name="add" size={20} /> Add item
         </Text>
       </TouchableOpacity>
     </View>
