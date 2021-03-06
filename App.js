@@ -1,31 +1,45 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Alert} from 'react-native';
-import {uuid} from 'uuidv4';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, FlatList, Alert, Text} from 'react-native';
+import {v4 as uuidv4} from 'uuid';
 import { registerRootComponent } from 'expo';
+import firebase from 'firebase/app'
+import '@firebase/firestore';
+
 
 import Header from './components/Header';
 import ListItem from './components/ListItem';
 import AddItem from './components/AddItem';
 
+// Remember to remove your credentials before pushing to git
+const firebaseConfig = {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: ""
+  };
+
+
+firebase.initializeApp(firebaseConfig);
+
+const dbh = firebase.firestore();
+
 const App = () => {
-  const [items, setItems] = useState([
-    {
-      id: uuid(),
-      text: 'Milk',
-    },
-    {
-      id: uuid(),
-      text: 'Eggs',
-    },
-    {
-      id: uuid(),
-      text: 'Bread',
-    },
-    {
-      id: uuid(),
-      text: 'Juice',
-    },
-  ]);
+
+  const [items, setItems] = useState([])
+
+  useEffect(() => {
+    fetchItems();
+  }, [])
+
+  const fetchItems = async() => {
+    const response = dbh.collection("items");
+    const data = await response.get();
+    data.docs.forEach(item => {
+      setItems(items => [...items,{'id': item.id, 'text': item.data()['text']}]);
+    })
+  }
 
   // Flag true if user is currently editing an item
   const [editStatus, editStatusChange] = useState(false);
@@ -39,6 +53,7 @@ const App = () => {
   const [checkedItems, checkedItemChange] = useState([]);
 
   const deleteItem = id => {
+    deleteFirebaseItem(id);
     setItems(prevItems => {
       return prevItems.filter(item => item.id !== id);
     });
@@ -46,6 +61,7 @@ const App = () => {
 
   // Submit the users edits to the overall items state
   const saveEditItem = (id, text) => {
+    editFirebaseItem(editItemDetail.id, editItemDetail.text);
     setItems(prevItems => {
       return prevItems.map(item =>
         item.id === editItemDetail.id ? {id, text: editItemDetail.text} : item,
@@ -59,6 +75,24 @@ const App = () => {
   const handleEditChange = text => {
     editItemDetailChange({id: editItemDetail.id, text});
   };
+
+  const addNewFirebaseItem = (text) => {
+    const newItemID = uuidv4()
+    dbh.collection("items").doc(newItemID).set({
+      text: text,
+    });
+    setItems(items => [...items, {'id': newItemID, 'text': text}]);
+  }
+
+  const deleteFirebaseItem = (id) => {
+    dbh.collection("items").doc(id).delete();
+  }
+
+  const editFirebaseItem = (id, text) => {
+    dbh.collection("items").doc(id).set({
+      text: text,
+    });
+  }
 
   const addItem = text => {
     if (!text) {
@@ -74,9 +108,7 @@ const App = () => {
         {cancelable: true},
       );
     } else {
-      setItems(prevItems => {
-        return [{id: uuid(), text}, ...prevItems];
-      });
+      addNewFirebaseItem(text);
     }
   };
 
@@ -108,7 +140,8 @@ const App = () => {
       <AddItem addItem={addItem} />
       <FlatList
         data={items}
-        renderItem={({item}) => (
+        keyExtractor = {(item, index) => item.id.toString()}
+        renderItem={({ item }) => (
           <ListItem
             item={item}
             deleteItem={deleteItem}
@@ -128,8 +161,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 30, 
+    marginTop: 30,
   },
 });
 
