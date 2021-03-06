@@ -2,19 +2,15 @@
 
 > App for React Native crash course on YouTube
 
-Extending crash course to fetch data from Google Firebase backend.
+Extending crash course to fetch data from Google Firebase backend, and to run on Expo.
 
 ## Quick Start
 
 ``` bash
 # Install dependencies
 npm install
-cd ios && pod install && cd ..
 
-# Run on iOS
-react-native run-ios
-
-# Run on Android
-react-native run-android
+# Start
+expo start
 
 ```
