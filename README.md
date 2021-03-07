@@ -13,4 +13,13 @@ npm install
 # Start
 expo start
 
+# Usage
+scan the QR code with you device with Expo Go mobile app installed (or whatever method you prefer to run expo apps)
 ```
+
+## Demo
+Here's an iPhone screen recording showing the usage of the phone apps
+![iPhone gif](./gifs/iphone.gif)
+
+And here's a recording of the firestore console showing the backend data being added/changed
+![Desktop gif](./gifs/chrome.gif)
